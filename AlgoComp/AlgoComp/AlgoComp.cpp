@@ -20,23 +20,26 @@ const int VERSE_BASS = 0;
 const int VERSE_SNARE = 0;
 const int VERSE_CRASH = 0;
 
-const int CHORUS_BASS = 0;
-const int CHORUS_SNARE = 0;
-const int CHORUS_CRASH = 0;
+const int CHORUS_BASS = 1;
+const int CHORUS_SNARE = 1;
+const int CHORUS_CRASH = 1;
 
 //enum for composing a song structure
-//used to index 1st dimension of availableTracks
+//used to index base paths and 1st dimension of availableTracks
 enum SECTION {
 	INTRO,
 	VERSE,
 	CHORUS
 };
 
+
 enum INSTRUMENT {
 	BASS,
 	SNARE,
 	CRASH
 };
+
+const std::string basePaths[]{ "Drums\\Intro\\" , "Drums\\Verse\\" ,"Drums\\Chorus\\" };
 
 const int availableTracks[3][3] = { {INTRO_BASS,	INTRO_SNARE,	INTRO_CRASH},
 									{VERSE_BASS,	VERSE_SNARE,	VERSE_CRASH},
@@ -106,12 +109,11 @@ int main() {
 	MidiFile output;
 	output.addTrack();
 
-	SECTION songStructure[] { INTRO};
-	int barsPerSection[]{ 4 };
-	std::string basePaths[]{ "Drums\\Intro\\" };//, "Drums\\Verse\\", "Drums\\Chorus\\"};
+	SECTION songStructure[] { INTRO, CHORUS };
+	int barsPerSection[] { 4, 8 };
 
-	for (SECTION i : songStructure) {
-		appendSongSection(basePaths[i], availableTracks[i], barsPerSection[i] ,currentBar, output);
+	for (int i = 0; i < 2; ++i) {
+		appendSongSection(basePaths[songStructure[i]], availableTracks[songStructure[i]], barsPerSection[i], currentBar, output);
 	}
 
 	output.write("out.mid");
