@@ -1,4 +1,4 @@
 ﻿  AlgoComp.cpp
-c:\users\matt\desktop\cs190\cs_190_group5a_repo\algocomp\algocomp\algocomp.cpp(125): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\matt\desktop\cs190\cs_190_group5a_repo\algocomp\algocomp\algocomp.cpp(140): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   AlgoComp.vcxproj -> C:\Users\Matt\Desktop\CS190\cs_190_group5a_repo\AlgoComp\Debug\AlgoComp.exe
   AlgoComp.vcxproj -> C:\Users\Matt\Desktop\CS190\cs_190_group5a_repo\AlgoComp\Debug\AlgoComp.pdb (Partial PDB)
