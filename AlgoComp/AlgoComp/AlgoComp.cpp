@@ -10,19 +10,24 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <time.h>
 #include <vector>
+
 //the number of selections available for each instrument in each portion of the song
-const int INTRO_BASS = 1;
-const int INTRO_SNARE = 1;
+const int INTRO_BASS = 5;
+const int INTRO_SNARE = 5;
 const int INTRO_CRASH = 1;
+const int INTRO_HAT = 4;
 
-const int VERSE_BASS = 0;
-const int VERSE_SNARE = 0;
+const int VERSE_BASS = 7;
+const int VERSE_SNARE = 7;
 const int VERSE_CRASH = 0;
+const int VERSE_HAT = 7;
 
-const int CHORUS_BASS = 1;
-const int CHORUS_SNARE = 1;
-const int CHORUS_CRASH = 1;
+const int CHORUS_BASS = 7;
+const int CHORUS_SNARE = 7;
+const int CHORUS_CRASH = 3;
+const int CHORUS_HAT = 6;
 
 //enum for composing a song structure
 //used to index base paths and 1st dimension of availableTracks
@@ -36,14 +41,15 @@ enum SECTION {
 enum INSTRUMENT {
 	BASS,
 	SNARE,
-	CRASH
+	CRASH,
+	HAT
 };
 
 const std::string basePaths[]{ "Drums\\Intro\\" , "Drums\\Verse\\" ,"Drums\\Chorus\\" };
 
-const int availableTracks[3][3] = { {INTRO_BASS,	INTRO_SNARE,	INTRO_CRASH},
-									{VERSE_BASS,	VERSE_SNARE,	VERSE_CRASH},
-									{CHORUS_BASS,	CHORUS_SNARE,	CHORUS_CRASH} 
+const int availableTracks[3][4] = { {INTRO_BASS,	INTRO_SNARE,	INTRO_CRASH,	INTRO_HAT},
+									{VERSE_BASS,	VERSE_SNARE,	VERSE_CRASH,	VERSE_HAT},
+									{CHORUS_BASS,	CHORUS_SNARE,	CHORUS_CRASH,	CHORUS_HAT} 
 								  };
 
 
@@ -87,10 +93,18 @@ void appendSongSection(std::string basePath, const int* available, int barsToAdd
 		snare.read(basePath + "snare" + std::to_string((std::rand() % available[SNARE]) + 1) + ".mid");
 		instruments.push_back(snare);
 	}
-	if (available[CRASH] > 0) {
-		MidiFile crash;
-		crash.read(basePath + "crash" + std::to_string((std::rand() % available[CRASH]) + 1) + ".mid");
-		instruments.push_back(crash);
+
+	if(std::rand() % 4 > 2)
+		if (available[CRASH] > 0) {
+			MidiFile crash;
+			crash.read(basePath + "crash" + std::to_string((std::rand() % available[CRASH]) + 1) + ".mid");
+			instruments.push_back(crash);
+		}
+
+	if (available[HAT] > 0) {
+		MidiFile hat;
+		hat.read(basePath + "hat" + std::to_string((std::rand() % available[HAT]) + 1) + ".mid");
+		instruments.push_back(hat);
 	}
 	
 	//make sure all tracks use same ticks per quarter note as output file
@@ -108,11 +122,11 @@ int main() {
 	int currentBar = 0;
 	MidiFile output;
 	output.addTrack();
+	srand(time(NULL));
+	SECTION songStructure[] { INTRO, CHORUS, VERSE };
+	int barsPerSection[] { 2, 4, 4 };
 
-	SECTION songStructure[] { INTRO, CHORUS };
-	int barsPerSection[] { 4, 8 };
-
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		appendSongSection(basePaths[songStructure[i]], availableTracks[songStructure[i]], barsPerSection[i], currentBar, output);
 	}
 
